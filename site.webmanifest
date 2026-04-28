@@ -1,0 +1,21 @@
+{
+  "name": "Punta Gorda Martial Arts",
+  "short_name": "PGMA",
+  "description": "Brazilian Jiu-Jitsu for kids, teens, and adults in Punta Gorda, FL.",
+  "icons": [
+    {
+      "src": "images/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0A1628",
+  "background_color": "#F7F4ED",
+  "display": "standalone",
+  "start_url": "/"
+}
