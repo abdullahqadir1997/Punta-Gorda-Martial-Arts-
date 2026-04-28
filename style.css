@@ -3077,7 +3077,7 @@ section { padding: clamp(4rem, 9vw, 8rem) 0; position: relative; }
 }
 .footer-brand .nav-logo-img {
   height: 52px;
-  filter: brightness(0) invert(1);
+  filter: invert(1);
 }
 @media (max-width: 900px) {
   .nav-logo-img { height: 38px; }
