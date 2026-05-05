@@ -166,18 +166,23 @@
               <input type="email" name="email" required autocomplete="email" />
             </label>
 
-            <label class="form-field">
+            <div class="form-field">
               <span>Who's coming to class?</span>
-              <select name="program">
-                <option value="">— pick one —</option>
-                <option>Me — Adults &amp; Teens (13+)</option>
-                <option>My kid — Young Grapplers (7–12)</option>
-                <option>My kid — Mighty Grapplers (5–6)</option>
-                <option>My kid — Homeschool BJJ (6–14)</option>
-                <option>Private lesson — me or my kid</option>
-                <option>Not sure yet</option>
-              </select>
-            </label>
+              <div class="pgma-multi-dropdown">
+                <button type="button" class="pgma-multi-trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="pgma-multi-value">Select program(s)...</span>
+                  <svg class="pgma-multi-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4.5L7 9.5L12 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="pgma-multi-panel" role="listbox" aria-multiselectable="true" hidden>
+                  <label class="pgma-multi-option"><input type="checkbox" name="program" value="adults-teens" /><span class="pgma-multi-check"></span><span class="pgma-multi-text">Adults &amp; Teens BJJ<small>Ages 13+</small></span></label>
+                  <label class="pgma-multi-option"><input type="checkbox" name="program" value="young-grapplers" /><span class="pgma-multi-check"></span><span class="pgma-multi-text">Young Grapplers<small>Ages 7–12</small></span></label>
+                  <label class="pgma-multi-option"><input type="checkbox" name="program" value="mighty-grapplers" /><span class="pgma-multi-check"></span><span class="pgma-multi-text">Mighty Grapplers<small>Ages 5–6</small></span></label>
+                  <label class="pgma-multi-option"><input type="checkbox" name="program" value="homeschool" /><span class="pgma-multi-check"></span><span class="pgma-multi-text">Homeschool BJJ<small>Ages 6–14</small></span></label>
+                  <label class="pgma-multi-option"><input type="checkbox" name="program" value="private-lessons" /><span class="pgma-multi-check"></span><span class="pgma-multi-text">Private Lessons<small>Any age, 1-on-1</small></span></label>
+                  <label class="pgma-multi-option"><input type="checkbox" name="program" value="not-sure" /><span class="pgma-multi-check"></span><span class="pgma-multi-text">Not sure yet<small>We'll help you pick</small></span></label>
+                </div>
+              </div>
+            </div>
 
             <div class="pgma-honeypot" aria-hidden="true">
               <label>Leave this blank <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>

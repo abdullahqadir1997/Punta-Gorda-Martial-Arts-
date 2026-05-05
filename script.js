@@ -306,26 +306,22 @@
           <label>Leave this blank <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
         </div>
         <div class="pgma-form-field" id="pgmaProgramField">
-          <span>Choose Your Program <em>*</em></span>
-          <div class="pgma-program-select" role="radiogroup" aria-required="true">
-            <label class="pgma-program-option">
-              <input type="radio" name="program" value="adults-teens" />
-              <span class="pgma-program-label"><strong>Adults &amp; Teens BJJ</strong><small>Ages 13 and up</small></span>
-            </label>
-            <label class="pgma-program-option">
-              <input type="radio" name="program" value="young-grapplers" />
-              <span class="pgma-program-label"><strong>Young Grapplers</strong><small>Ages 7–12</small></span>
-            </label>
-            <label class="pgma-program-option">
-              <input type="radio" name="program" value="mighty-grapplers" />
-              <span class="pgma-program-label"><strong>Mighty Grapplers</strong><small>Ages 5–6</small></span>
-            </label>
-            <label class="pgma-program-option">
-              <input type="radio" name="program" value="homeschool" />
-              <span class="pgma-program-label"><strong>Homeschool BJJ</strong><small>Ages 5–12</small></span>
-            </label>
+          <span>Choose Your Program(s) <em>*</em></span>
+          <div class="pgma-multi-dropdown">
+            <button type="button" class="pgma-multi-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span class="pgma-multi-value">Select program(s)...</span>
+              <svg class="pgma-multi-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4.5L7 9.5L12 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="pgma-multi-panel" role="listbox" aria-multiselectable="true" hidden>
+              <label class="pgma-multi-option"><input type="checkbox" name="program" value="adults-teens" /><span class="pgma-multi-check"></span><span class="pgma-multi-text">Adults &amp; Teens BJJ<small>Ages 13+</small></span></label>
+              <label class="pgma-multi-option"><input type="checkbox" name="program" value="young-grapplers" /><span class="pgma-multi-check"></span><span class="pgma-multi-text">Young Grapplers<small>Ages 7–12</small></span></label>
+              <label class="pgma-multi-option"><input type="checkbox" name="program" value="mighty-grapplers" /><span class="pgma-multi-check"></span><span class="pgma-multi-text">Mighty Grapplers<small>Ages 5–6</small></span></label>
+              <label class="pgma-multi-option"><input type="checkbox" name="program" value="homeschool" /><span class="pgma-multi-check"></span><span class="pgma-multi-text">Homeschool BJJ<small>Ages 6–14</small></span></label>
+              <label class="pgma-multi-option"><input type="checkbox" name="program" value="private-lessons" /><span class="pgma-multi-check"></span><span class="pgma-multi-text">Private Lessons<small>Any age, 1-on-1</small></span></label>
+              <label class="pgma-multi-option"><input type="checkbox" name="program" value="not-sure" /><span class="pgma-multi-check"></span><span class="pgma-multi-text">Not sure yet<small>We'll help you pick</small></span></label>
+            </div>
           </div>
-          <span class="pgma-field-error">Please choose a program.</span>
+          <span class="pgma-field-error">Please choose at least one program.</span>
         </div>
         <button type="submit" class="btn btn-primary btn-lg pgma-modal-submit">
           Send My Free Class Request <span class="arrow">&#x2192;</span>
@@ -430,7 +426,7 @@
       let valid = true;
 
       // Text / email fields
-      trialForm.querySelectorAll('input[required]:not([type="radio"])').forEach((input) => {
+      trialForm.querySelectorAll('input[required]:not([type="checkbox"])').forEach((input) => {
         const field = input.closest('.pgma-form-field');
         const bad = !input.value.trim() ||
           (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim()));
@@ -441,10 +437,10 @@
 
       // Program selection
       const programField  = document.getElementById('pgmaProgramField');
-      const programSelect = trialForm.querySelector('.pgma-program-select');
       const programPicked = !!trialForm.querySelector('input[name="program"]:checked');
       programField.classList.toggle('pgma-has-error', !programPicked);
-      programSelect.classList.toggle('pgma-error', !programPicked);
+      const multiTrigger = trialForm.querySelector('.pgma-multi-trigger');
+      if (multiTrigger) multiTrigger.classList.toggle('pgma-error', !programPicked);
       if (!programPicked) valid = false;
 
       if (!valid) return;
@@ -471,15 +467,69 @@
       });
     });
 
-    trialForm.querySelectorAll('input[name="program"]').forEach((radio) => {
-      radio.addEventListener('change', () => {
+    trialForm.querySelectorAll('input[name="program"]').forEach((cb) => {
+      cb.addEventListener('change', () => {
         const pf = document.getElementById('pgmaProgramField');
-        const ps = trialForm.querySelector('.pgma-program-select');
+        const mt = trialForm.querySelector('.pgma-multi-trigger');
         if (pf) pf.classList.remove('pgma-has-error');
-        if (ps) ps.classList.remove('pgma-error');
+        if (mt) mt.classList.remove('pgma-error');
       });
     });
   }
+
+  // Init all multi-select dropdowns on the page
+  function initMultiDropdowns(root) {
+    (root || document).querySelectorAll('.pgma-multi-dropdown').forEach((dd) => {
+      const trigger = dd.querySelector('.pgma-multi-trigger');
+      const panel   = dd.querySelector('.pgma-multi-panel');
+      const valueEl = dd.querySelector('.pgma-multi-value');
+      if (!trigger || !panel) return;
+
+      function updateLabel() {
+        const checked = dd.querySelectorAll('input[type="checkbox"]:checked');
+        if (checked.length === 0) {
+          valueEl.textContent = 'Select program(s)...';
+        } else {
+          const labels = Array.from(checked).map((c) => {
+            const textEl = c.closest('.pgma-multi-option').querySelector('.pgma-multi-text');
+            return textEl ? textEl.firstChild.textContent.trim() : c.value;
+          });
+          valueEl.textContent = labels.join(', ');
+        }
+      }
+
+      function openPanel() {
+        panel.hidden = false;
+        trigger.setAttribute('aria-expanded', 'true');
+        trigger.classList.add('open');
+      }
+
+      function closePanel() {
+        panel.hidden = true;
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.classList.remove('open');
+      }
+
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        panel.hidden ? openPanel() : closePanel();
+      });
+
+      dd.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+        cb.addEventListener('change', updateLabel);
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!dd.contains(e.target)) closePanel();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closePanel();
+      });
+    });
+  }
+
+  initMultiDropdowns(document);
 
 })();
 
